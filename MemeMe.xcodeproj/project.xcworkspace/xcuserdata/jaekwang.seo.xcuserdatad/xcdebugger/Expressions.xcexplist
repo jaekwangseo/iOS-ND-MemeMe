@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "MemeTableTableViewController.action(UIBarButtonItem) -&gt; ():MemeTableTableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.memes">
+            </PersistentString>
+            <PersistentString
+               value = "self.memes.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ViewController.keyboardWillShow(NSNotification) -&gt; ():ViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "bottomTextField.focused">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
