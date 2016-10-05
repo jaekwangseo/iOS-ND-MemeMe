@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "table_90x90.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon_ios_keypad_filled.png",
       "scale" : "2x"
     },
     {
