@@ -8,13 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
     @IBOutlet weak var imagePickerView: UIImageView!
-    @IBOutlet weak var captureButton: UIBarButtonItem!
+    
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
+    
     @IBOutlet weak var toolBar: UIToolbar!
+    
+    @IBOutlet weak var captureButton: UIBarButtonItem!
     @IBOutlet weak var navBar: UINavigationBar!
     @IBOutlet weak var shareButton: UIBarButtonItem! {
         
@@ -26,29 +29,21 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         self.tabBarController?.hidesBottomBarWhenPushed = true
         topTextField.delegate = self
         bottomTextField.delegate = self
+        
     }
     
     override func viewWillAppear(animated: Bool) {
-        
         super.viewWillAppear(animated)
+        
         captureButton.enabled = UIImagePickerController.isSourceTypeAvailable(.Camera)
-        
-        let memeTextAttributes = [
-            NSForegroundColorAttributeName : UIColor.whiteColor(),
-            NSStrokeColorAttributeName : UIColor.blackColor(),
-            NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-            NSStrokeWidthAttributeName : -3.0
-            
-        ]
-        
-        topTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.textAlignment = .Center
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.textAlignment = .Center
+
+        configureMemeTextFields(topTextField)
+        configureMemeTextFields(bottomTextField)
         
         if imagePickerView != nil && imagePickerView.image != nil {
             shareButton.enabled = true
@@ -58,30 +53,46 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
     }
     
+    private func configureMemeTextFields(textField: UITextField) {
+        
+        let memeTextAttributes = [
+            NSForegroundColorAttributeName : UIColor.whiteColor(),
+            NSStrokeColorAttributeName : UIColor.blackColor(),
+            NSFontAttributeName : UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
+            NSStrokeWidthAttributeName : -3.0
+            
+        ]
+        
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .Center
+
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        
         unsubscribeFromKeyboardNotifications()
     }
     
     @IBAction func pickAnImage(sender: UIBarButtonItem) {
-        
-        let imagePickerViewController = UIImagePickerController()
-        imagePickerViewController.delegate = self
-        self.presentViewController(imagePickerViewController, animated: true, completion: nil)
+    
+        pickAnImageFromSource(.PhotoLibrary)
         
     }
     
     @IBAction func captureImageFromCamera(sender: UIBarButtonItem) {
         
-        let cameraVC = UIImagePickerController()
-        cameraVC.delegate = self
-        cameraVC.sourceType = .Camera
-        self.presentViewController(cameraVC, animated: true, completion: nil)
+        pickAnImageFromSource(.Camera)
         
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func pickAnImageFromSource(source: UIImagePickerControllerSourceType) {
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.sourceType = source
+        self.presentViewController(imagePickerController, animated: true, completion: nil)
+        
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -96,9 +107,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func subscribeToKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWillShow(_:))    , name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MemeEditorViewController.keyboardWillShow(_:))    , name: UIKeyboardWillShowNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ViewController.keyboardWillHide(_:))    , name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MemeEditorViewController.keyboardWillHide(_:))    , name: UIKeyboardWillHideNotification, object: nil)
         
     }
     
@@ -113,7 +124,9 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func keyboardWillShow(notification: NSNotification) {
         if (view.frame.origin.y == 0) {
-            view.frame.origin.y -= getKeyboardHeight(notification)
+            if bottomTextField.isFirstResponder() {
+                view.frame.origin.y -= getKeyboardHeight(notification)
+            }
         }
         
     }
@@ -140,8 +153,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         //Create the meme
         let activityVC = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
         activityVC.completionWithItemsHandler =  { activity, success, items, error in
+            
+            if success {
                 self.save()
             }
+        }
         
         self.presentViewController(activityVC, animated: true, completion: nil)
     
