@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeEditorViewController.swift
 //  ImagePicker
 //
 //  Created by Jaekwang Seo on 5/27/16.
@@ -31,9 +31,12 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         super.viewDidLoad()
         
         // Do any additional setup after loading the view, typically from a nib.
-        self.tabBarController?.hidesBottomBarWhenPushed = true
+        //self.tabBarController?.hidesBottomBarWhenPushed = true
         topTextField.delegate = self
         bottomTextField.delegate = self
+        
+        configureMemeTextFields(topTextField)
+        configureMemeTextFields(bottomTextField)
         
     }
     
@@ -41,9 +44,6 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         super.viewWillAppear(animated)
         
         captureButton.enabled = UIImagePickerController.isSourceTypeAvailable(.Camera)
-
-        configureMemeTextFields(topTextField)
-        configureMemeTextFields(bottomTextField)
         
         if imagePickerView != nil && imagePickerView.image != nil {
             shareButton.enabled = true
@@ -155,7 +155,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         activityVC.completionWithItemsHandler =  { activity, success, items, error in
             
             if success {
-                self.save()
+                self.save(memedImage)
             }
         }
         
@@ -163,10 +163,13 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     
     }
     
-    
-    func save() {
+    @IBAction func cancel(sender: UIBarButtonItem) {
         
-        let memedImage = generateMemedImage()
+        dismissViewControllerAnimated(true, completion: nil)
+        
+    }
+    
+    func save(memedImage: UIImage) {
         
         //Create the meme
         let meme = Meme( topText: topTextField.text!, bottomText: bottomTextField.text!, image:
@@ -176,6 +179,12 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         let object = UIApplication.sharedApplication().delegate
         let appDelegate = object as! AppDelegate
         appDelegate.memes.append(meme)
+        
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+ 
     }
     
     
