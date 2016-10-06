@@ -14,10 +14,40 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "MemeEditorViewController.viewWillAppear(Bool) -&gt; ():MemeEditorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(UIApplication.sharedApplication().delegate as! AppDelegate).memes">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ViewController.keyboardWillShow(NSNotification) -&gt; ():ViewController.swift">
          <PersistentStrings>
             <PersistentString
                value = "bottomTextField.focused">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "TableViewController.viewDidLoad() -&gt; ():TableViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "tabBarController?.parentViewController as? UINavigationController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MemeEditorViewController.(cancel(UIBarButtonItem) -&gt; ()).(closure #1).(closure #1):MemeEditorViewController.swift">
+      </ContextState>
+      <ContextState
+         contextName = "MemeEditorViewController.generateMemedImage() -&gt; UIImage:MemeEditorViewController.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "(UIImage)memedImage">
+            </PersistentString>
+            <PersistentString
+               value = "self.imagePickerView.frame">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
